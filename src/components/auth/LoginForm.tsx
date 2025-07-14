@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,9 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
+  // Simple redirect to dashboard after login
+  const redirectTo = "/dashboard";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -39,7 +42,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
       setSuccess(true);
       // Small delay to show success message before redirect
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push(redirectTo);
       }, 1000);
     } catch (err: any) {
       setError(err.message || "Terjadi kesalahan saat login");
