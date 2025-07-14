@@ -1,47 +1,53 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Store, Users, Package, TrendingUp, DollarSign } from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
-import { getStoreStats } from '@/lib/stores'
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Store, Users, Package, TrendingUp, DollarSign } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { getStoreStats } from "@/lib/stores";
 
 interface StoreStats {
-  productCount: number
-  todayTransactions: number
-  todayRevenue: number
-  staffCount: number
+  productCount: number;
+  todayTransactions: number;
+  todayRevenue: number;
+  staffCount: number;
 }
 
 export function StoreInfo() {
-  const { profile } = useAuth()
+  const { profile } = useAuth();
   const [stats, setStats] = useState<StoreStats>({
     productCount: 0,
     todayTransactions: 0,
     todayRevenue: 0,
     staffCount: 0,
-  })
-  const [loading, setLoading] = useState(true)
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       if (profile?.store_id) {
         try {
-          const storeStats = await getStoreStats(profile.store_id)
-          setStats(storeStats)
+          const storeStats = await getStoreStats(profile.store_id);
+          setStats(storeStats);
         } catch (error) {
-          console.error('Error fetching store stats:', error)
+          console.error("Error fetching store stats:", error);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       } else {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchStats()
-  }, [profile?.store_id])
+    fetchStats();
+  }, [profile?.store_id]);
 
   if (!profile) {
     return (
@@ -54,16 +60,16 @@ export function StoreInfo() {
           <CardDescription>Loading store information...</CardDescription>
         </CardHeader>
       </Card>
-    )
+    );
   }
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
       minimumFractionDigits: 0,
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   return (
     <div className="space-y-6">
@@ -76,14 +82,24 @@ export function StoreInfo() {
               <div>
                 <CardTitle className="text-xl">{profile.store_name}</CardTitle>
                 <CardDescription>
-                  Owner: {profile.full_name} • Role: {' '}
-                  <Badge variant={profile.role === 'owner' ? 'default' : 'secondary'}>
+                  Owner: {profile.full_name} • Role: {"  "}
+                  <Badge
+                    variant={profile.role === "owner" ? "default" : "secondary"}
+                    className={
+                      profile.role === "owner"
+                        ? "bg-blue-600 hover:bg-blue-700"
+                        : ""
+                    }
+                  >
                     {profile.role}
                   </Badge>
                 </CardDescription>
               </div>
             </div>
-            <Badge variant="outline" className="text-green-600 border-green-600">
+            <Badge
+              variant="outline"
+              className="text-green-600 border-green-600"
+            >
               Active
             </Badge>
           </div>
@@ -99,7 +115,7 @@ export function StoreInfo() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? '...' : stats.productCount}
+              {loading ? "..." : stats.productCount}
             </div>
             <p className="text-xs text-muted-foreground">
               Active products in inventory
@@ -114,7 +130,7 @@ export function StoreInfo() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? '...' : stats.todayTransactions}
+              {loading ? "..." : stats.todayTransactions}
             </div>
             <p className="text-xs text-muted-foreground">
               Transactions completed today
@@ -124,16 +140,16 @@ export function StoreInfo() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Today's Revenue
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? '...' : formatCurrency(stats.todayRevenue)}
+              {loading ? "..." : formatCurrency(stats.todayRevenue)}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Total revenue today
-            </p>
+            <p className="text-xs text-muted-foreground">Total revenue today</p>
           </CardContent>
         </Card>
 
@@ -144,11 +160,9 @@ export function StoreInfo() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {loading ? '...' : stats.staffCount}
+              {loading ? "..." : stats.staffCount}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Active team members
-            </p>
+            <p className="text-xs text-muted-foreground">Active team members</p>
           </CardContent>
         </Card>
       </div>
@@ -188,5 +202,5 @@ export function StoreInfo() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

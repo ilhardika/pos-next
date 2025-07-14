@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { StoreInfo } from "@/components/dashboard/StoreInfo";
-import { Store, User, LogOut } from "lucide-react";
+import { Store, User, LogOut, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
@@ -51,12 +51,9 @@ export default function DashboardPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <Store className="h-8 w-8 text-primary" />
+              <UserCircle className="h-8 w-8 text-primary" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {profile?.store_name || "POS Dashboard"}
-                </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-2xl font-bold text-gray-900">
                   Welcome back, {profile?.full_name || user.email}
                 </p>
               </div>
@@ -93,77 +90,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
-
-        {/* User Info Card */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 mt-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                User Profile
-              </CardTitle>
-              <User className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm font-medium">Name</p>
-                  <p className="text-sm text-muted-foreground">
-                    {profile?.full_name || "Not set"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Email</p>
-                  <p className="text-sm text-muted-foreground">{user.email}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Role</p>
-                  <p className="text-sm text-muted-foreground capitalize">
-                    {profile?.role || "Not set"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Store</p>
-                  <p className="text-sm text-muted-foreground">
-                    {profile?.store_name || "No store assigned"}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Authentication Status
-              </CardTitle>
-              <Store className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div>
-                  <p className="text-sm font-medium">Email Verified</p>
-                  <p className="text-sm text-muted-foreground">
-                    {user.email_confirmed_at ? "Yes" : "No"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Account Status</p>
-                  <p className="text-sm text-muted-foreground">
-                    {profile?.is_active ? "Active" : "Inactive"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Last Sign In</p>
-                  <p className="text-sm text-muted-foreground">
-                    {user.last_sign_in_at
-                      ? new Date(user.last_sign_in_at).toLocaleDateString()
-                      : "Never"}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );

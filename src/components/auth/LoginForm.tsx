@@ -25,19 +25,24 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess(false);
 
     try {
       await signIn(email, password);
-      router.push("/dashboard");
+      setSuccess(true);
+      // Small delay to show success message before redirect
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
     } catch (err: any) {
       setError(err.message || "An error occurred during login");
-    } finally {
       setLoading(false);
     }
   };
@@ -63,7 +68,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={loading}
+              disabled={loading || success}
             />
           </div>
 
@@ -77,7 +82,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={loading}
+                disabled={loading || success}
               />
               <Button
                 type="button"
@@ -85,7 +90,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                 size="sm"
                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
-                disabled={loading}
+                disabled={loading || success}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -102,12 +107,24 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
             </div>
           )}
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          {success && (
+            <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+              Login successful! Redirecting to dashboard...
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading || success}
+          >
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Signing in...
               </>
+            ) : success ? (
+              "Redirecting..."
             ) : (
               "Sign In"
             )}
@@ -122,7 +139,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
                 variant="link"
                 className="p-0 h-auto font-normal"
                 onClick={onToggleMode}
-                disabled={loading}
+                disabled={loading || success}
               >
                 Register here
               </Button>
