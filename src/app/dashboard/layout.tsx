@@ -1,10 +1,5 @@
-// AuthGuard temporarily disabled to prevent infinite redirect loop
-// import AuthGuard from "@/components/auth/AuthGuard";
+import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <div className="min-h-screen bg-gray-50">{children}</div>;
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <DashboardLayout>{children}</DashboardLayout>;
 }

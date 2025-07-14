@@ -1,95 +1,130 @@
-"use client";
-
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { StoreInfo } from "@/components/dashboard/StoreInfo";
-import { Store, LogOut, UserCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+  TrendingUp,
+  Package,
+  ShoppingCart,
+  Users,
+  DollarSign,
+  Activity,
+} from "lucide-react";
 
 export default function DashboardPage() {
-  const { user, profile, loading, signOut } = useAuth();
-  const router = useRouter();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      router.push("/login");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Store className="h-12 w-12 mx-auto text-primary animate-pulse" />
-          <p className="mt-2 text-sm text-muted-foreground">
-            Memuat dashboard...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    router.push("/login");
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <UserCircle className="h-8 w-8 text-primary" />
-              <div>
-                <p className="text-2xl font-bold text-gray-900">
-                  Halo, {profile?.full_name || user.email}
-                </p>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Selamat datang kembali! Berikut ringkasan toko Anda hari ini.
+        </p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Penjualan
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">Rp 0</div>
+            <p className="text-xs text-muted-foreground">+0% dari bulan lalu</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Transaksi</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">+0% dari kemarin</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Produk</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">Total produk aktif</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Staff Aktif</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">1</div>
+            <p className="text-xs text-muted-foreground">
+              Staff yang login hari ini
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Actions & Recent Activity */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Aktivitas Terbaru</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center">
+                <Activity className="h-4 w-4 text-muted-foreground mr-2" />
+                <div className="flex-1 space-y-1">
+                  <p className="text-sm font-medium leading-none">
+                    Dashboard diakses
+                  </p>
+                  <p className="text-sm text-muted-foreground">Baru saja</p>
+                </div>
               </div>
             </div>
-            <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              Keluar
-            </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Store Information */}
-        {profile ? (
-          <StoreInfo />
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>Menyiapkan toko Anda...</CardTitle>
-              <CardDescription>
-                {user?.email_confirmed_at
-                  ? "Membuat toko dan profil Anda. Mohon tunggu sebentar..."
-                  : "Silakan verifikasi email Anda untuk menyelesaikan pengaturan toko."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {!user?.email_confirmed_at && (
-                <div className="text-sm text-muted-foreground">
-                  <p>Periksa email Anda untuk tautan verifikasi.</p>
-                  <p className="mt-2">
-                    Email: <strong>{user?.email}</strong>
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Status Toko</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Status</span>
+                <Badge
+                  variant="secondary"
+                  className="bg-green-100 text-green-800"
+                >
+                  Aktif
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Jam Operasional</span>
+                <span className="text-sm text-muted-foreground">
+                  08:00 - 22:00
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Sistem</span>
+                <Badge
+                  variant="secondary"
+                  className="bg-blue-100 text-blue-800"
+                >
+                  Online
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
