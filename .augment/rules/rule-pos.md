@@ -14,3 +14,4 @@ type: "always_apply"
 - Validate form inputs with `zod` before any write action (especially mutations).
 - Follow a DRY (Don't Repeat Yourself) principle in all code.
 - Follow a clean code structure: split logic into utilities, use reusable components, and avoid inline business logic in JSX.
+- Auto delete unused codes or files
