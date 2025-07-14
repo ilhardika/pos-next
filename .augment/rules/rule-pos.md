@@ -15,4 +15,4 @@ type: "always_apply"
 - Follow a DRY (Don't Repeat Yourself) principle in all code.
 - Follow a clean code structure: split logic into utilities, use reusable components, and avoid inline business logic in JSX.
 - Auto delete unused codes or files
-- All System Language text use "Bahasa Indonesia"
+- All UI System Language text use "Bahasa Indonesia"

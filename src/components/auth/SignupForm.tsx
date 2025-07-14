@@ -43,22 +43,22 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
 
   const validateForm = () => {
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Kata sandi tidak cocok");
       return false;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setError("Kata sandi harus minimal 6 karakter");
       return false;
     }
 
     if (!formData.fullName.trim()) {
-      setError("Full name is required");
+      setError("Nama lengkap wajib diisi");
       return false;
     }
 
     if (!formData.storeName.trim()) {
-      setError("Store name is required");
+      setError("Nama toko wajib diisi");
       return false;
     }
 
@@ -91,7 +91,7 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
         }, 2000);
       }
     } catch (err: any) {
-      setError(err.message || "An error occurred during signup");
+      setError(err.message || "Terjadi kesalahan saat mendaftar");
     } finally {
       setLoading(false);
     }
@@ -102,10 +102,10 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-green-600">
-            Account Created!
+            Akun Berhasil Dibuat!
           </CardTitle>
           <CardDescription className="text-center">
-            Please check your email to verify your account
+            Silakan periksa email Anda untuk memverifikasi akun
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
@@ -113,7 +113,8 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
             <Store className="h-12 w-12 mx-auto text-green-600" />
           </div>
           <p className="text-sm text-muted-foreground">
-            We've sent a verification link to <strong>{formData.email}</strong>
+            Kami telah mengirim tautan verifikasi ke{" "}
+            <strong>{formData.email}</strong>
           </p>
         </CardContent>
       </Card>
@@ -124,21 +125,21 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          Create Account
+          Buat Akun
         </CardTitle>
         <CardDescription className="text-center">
-          Set up your POS system in minutes
+          Siapkan sistem POS Anda dalam hitungan menit
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="fullName">Nama Lengkap</Label>
             <Input
               id="fullName"
               name="fullName"
               type="text"
-              placeholder="Enter your full name"
+              placeholder="Masukkan nama lengkap Anda"
               value={formData.fullName}
               onChange={handleChange}
               required
@@ -147,12 +148,12 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="storeName">Store Name</Label>
+            <Label htmlFor="storeName">Nama Toko</Label>
             <Input
               id="storeName"
               name="storeName"
               type="text"
-              placeholder="Enter your store name"
+              placeholder="Masukkan nama toko Anda"
               value={formData.storeName}
               onChange={handleChange}
               required
@@ -166,7 +167,7 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
               id="email"
               name="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               value={formData.email}
               onChange={handleChange}
               required
@@ -175,13 +176,13 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Kata Sandi</Label>
             <div className="relative">
               <Input
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Create a password"
+                placeholder="Buat kata sandi"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -205,13 +206,13 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="confirmPassword">Konfirmasi Kata Sandi</Label>
             <div className="relative">
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm your password"
+                placeholder="Konfirmasi kata sandi Anda"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
@@ -244,10 +245,10 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating account...
+                Membuat akun...
               </>
             ) : (
-              "Create Account"
+              "Buat Akun"
             )}
           </Button>
         </form>
@@ -255,14 +256,14 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
         {onToggleMode && (
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
+              Sudah punya akun?{" "}
               <Button
                 variant="link"
                 className="p-0 h-auto font-normal"
                 onClick={onToggleMode}
                 disabled={loading}
               >
-                Login here
+                Masuk di sini
               </Button>
             </p>
           </div>

@@ -24,8 +24,8 @@ export default function Home() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="text-center">
         <Store className="h-12 w-12 mx-auto text-primary animate-pulse" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">POS System</h1>
-        <p className="mt-2 text-sm text-gray-600">Loading...</p>
+        <h1 className="mt-4 text-2xl font-bold text-gray-900">Sistem POS</h1>
+        <p className="mt-2 text-sm text-gray-600">Memuat...</p>
       </div>
     </div>
   );

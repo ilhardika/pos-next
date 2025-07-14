@@ -55,9 +55,9 @@ export function StoreInfo() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Store className="h-5 w-5" />
-            Store Information
+            Informasi Toko
           </CardTitle>
-          <CardDescription>Loading store information...</CardDescription>
+          <CardDescription>Memuat informasi toko...</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -82,7 +82,7 @@ export function StoreInfo() {
               <div>
                 <CardTitle className="text-xl">{profile.store_name}</CardTitle>
                 <CardDescription>
-                  Owner: {profile.full_name} • Role: {"  "}
+                  Pemilik: {profile.full_name} • Peran: {"  "}
                   <Badge
                     variant={profile.role === "owner" ? "default" : "secondary"}
                     className={
@@ -100,7 +100,7 @@ export function StoreInfo() {
               variant="outline"
               className="text-green-600 border-green-600"
             >
-              Active
+              Aktif
             </Badge>
           </div>
         </CardHeader>
@@ -108,40 +108,42 @@ export function StoreInfo() {
 
       {/* Store Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Products</CardTitle>
+        <Card className="gap-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 ">
+            <CardTitle className="text-sm font-medium">Produk</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {loading ? "..." : stats.productCount}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Active products in inventory
+            <p className="text-xs text-muted-foreground pt-1">
+              Produk aktif dalam inventori
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Sales</CardTitle>
+        <Card className="gap-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 ">
+            <CardTitle className="text-sm font-medium">
+              Penjualan Hari Ini
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {loading ? "..." : stats.todayTransactions}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Transactions completed today
+            <p className="text-xs text-muted-foreground pt-1">
+              Transaksi selesai hari ini
             </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="gap-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 ">
             <CardTitle className="text-sm font-medium">
-              Today's Revenue
+              Pendapatan Hari Ini
             </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -149,20 +151,24 @@ export function StoreInfo() {
             <div className="text-2xl font-bold">
               {loading ? "..." : formatCurrency(stats.todayRevenue)}
             </div>
-            <p className="text-xs text-muted-foreground">Total revenue today</p>
+            <p className="text-xs text-muted-foreground pt-1">
+              Total pendapatan hari ini
+            </p>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Staff</CardTitle>
+        <Card className="gap-3">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 ">
+            <CardTitle className="text-sm font-medium">Staf</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {loading ? "..." : stats.staffCount}
             </div>
-            <p className="text-xs text-muted-foreground">Active team members</p>
+            <p className="text-xs text-muted-foreground pt-1">
+              Anggota tim aktif
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -170,32 +176,32 @@ export function StoreInfo() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>Alat Bantu</CardTitle>
           <CardDescription>
-            Common tasks for managing your store
+            Tugas umum untuk mengelola toko Anda
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-              <Package className="h-6 w-6 mb-2 text-primary" />
-              <h3 className="font-medium">Manage Products</h3>
+            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-center">
+              <Package className="h-6 w-6 mb-2 text-primary mx-auto" />
+              <h3 className="font-medium">Kelola Produk</h3>
               <p className="text-sm text-muted-foreground">
-                Add, edit, or remove products from your inventory
+                Tambah, edit, atau hapus produk dari inventori Anda
               </p>
             </div>
-            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-              <TrendingUp className="h-6 w-6 mb-2 text-primary" />
-              <h3 className="font-medium">Process Sale</h3>
+            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-center">
+              <TrendingUp className="h-6 w-6 mb-2 text-primary mx-auto" />
+              <h3 className="font-medium">Proses Penjualan</h3>
               <p className="text-sm text-muted-foreground">
-                Start a new transaction at the point of sale
+                Mulai transaksi baru di point of sale
               </p>
             </div>
-            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
-              <Users className="h-6 w-6 mb-2 text-primary" />
-              <h3 className="font-medium">Manage Staff</h3>
+            <div className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors text-center">
+              <Users className="h-6 w-6 mb-2 text-primary mx-auto" />
+              <h3 className="font-medium">Kelola Staf</h3>
               <p className="text-sm text-muted-foreground">
-                Invite cashiers and manage team permissions
+                Undang kasir dan kelola izin tim
               </p>
             </div>
           </div>

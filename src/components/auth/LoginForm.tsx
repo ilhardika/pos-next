@@ -42,7 +42,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
         router.push("/dashboard");
       }, 1000);
     } catch (err: any) {
-      setError(err.message || "An error occurred during login");
+      setError(err.message || "Terjadi kesalahan saat login");
       setLoading(false);
     }
   };
@@ -50,11 +50,9 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
-          Sign In
-        </CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">Masuk</CardTitle>
         <CardDescription className="text-center">
-          Enter your credentials to access your POS system
+          Masukkan kredensial Anda untuk mengakses sistem POS
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -64,7 +62,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
             <Input
               id="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Masukkan email Anda"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -73,12 +71,12 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Kata Sandi</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your password"
+                placeholder="Masukkan kata sandi Anda"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -109,7 +107,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
 
           {success && (
             <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
-              Login successful! Redirecting to dashboard...
+              Login berhasil! Mengarahkan ke dashboard...
             </div>
           )}
 
@@ -121,12 +119,12 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Signing in...
+                Masuk...
               </>
             ) : success ? (
-              "Redirecting..."
+              "Mengarahkan..."
             ) : (
-              "Sign In"
+              "Masuk"
             )}
           </Button>
         </form>
@@ -134,14 +132,14 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
         {onToggleMode && (
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              Belum punya akun?{" "}
               <Button
                 variant="link"
                 className="p-0 h-auto font-normal"
                 onClick={onToggleMode}
                 disabled={loading || success}
               >
-                Register here
+                Daftar di sini
               </Button>
             </p>
           </div>

@@ -1,21 +1,21 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { SignupForm } from '@/components/auth/SignupForm'
-import { useAuth } from '@/hooks/useAuth'
-import { Store } from 'lucide-react'
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { SignupForm } from "@/components/auth/SignupForm";
+import { useAuth } from "@/hooks/useAuth";
+import { Store } from "lucide-react";
 
 export default function RegisterPage() {
-  const { user, loading } = useAuth()
-  const router = useRouter()
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
   // Redirect if already authenticated
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard')
+      router.push("/dashboard");
     }
-  }, [user, loading, router])
+  }, [user, loading, router]);
 
   // Show loading while checking auth state
   if (loading) {
@@ -23,15 +23,15 @@ export default function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <Store className="h-12 w-12 mx-auto text-primary animate-pulse" />
-          <p className="mt-2 text-sm text-muted-foreground">Loading...</p>
+          <p className="mt-2 text-sm text-muted-foreground">Memuat...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Don't render if user is authenticated (will redirect)
   if (user) {
-    return null
+    return null;
   }
 
   return (
@@ -42,24 +42,23 @@ export default function RegisterPage() {
           <div className="flex justify-center">
             <Store className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="mt-4 text-3xl font-bold text-gray-900">
-            POS System
-          </h1>
+          <h1 className="mt-4 text-3xl font-bold text-gray-900">Sistem POS</h1>
           <p className="mt-2 text-sm text-gray-600">
-            Modern point of sale for small businesses
+            Point of sale modern untuk UMKM
           </p>
         </div>
 
         {/* Signup Form */}
-        <SignupForm onToggleMode={() => router.push('/login')} />
+        <SignupForm onToggleMode={() => router.push("/login")} />
 
         {/* Footer */}
         <div className="text-center text-xs text-gray-500">
           <p>
-            By continuing, you agree to our Terms of Service and Privacy Policy
+            Dengan melanjutkan, Anda menyetujui Syarat Layanan dan Kebijakan
+            Privasi kami
           </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

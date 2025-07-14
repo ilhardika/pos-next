@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { StoreInfo } from "@/components/dashboard/StoreInfo";
-import { Store, User, LogOut, UserCircle } from "lucide-react";
+import { Store, LogOut, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
@@ -32,7 +32,7 @@ export default function DashboardPage() {
         <div className="text-center">
           <Store className="h-12 w-12 mx-auto text-primary animate-pulse" />
           <p className="mt-2 text-sm text-muted-foreground">
-            Loading dashboard...
+            Memuat dashboard...
           </p>
         </div>
       </div>
@@ -54,13 +54,13 @@ export default function DashboardPage() {
               <UserCircle className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-2xl font-bold text-gray-900">
-                  Welcome back, {profile?.full_name || user.email}
+                  Halo, {profile?.full_name || user.email}
                 </p>
               </div>
             </div>
             <Button variant="outline" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
+              Keluar
             </Button>
           </div>
         </div>
@@ -71,17 +71,17 @@ export default function DashboardPage() {
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>Setting up your store...</CardTitle>
+              <CardTitle>Menyiapkan toko Anda...</CardTitle>
               <CardDescription>
                 {user?.email_confirmed_at
-                  ? "Creating your store and profile. This may take a moment..."
-                  : "Please verify your email to complete store setup."}
+                  ? "Membuat toko dan profil Anda. Mohon tunggu sebentar..."
+                  : "Silakan verifikasi email Anda untuk menyelesaikan pengaturan toko."}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {!user?.email_confirmed_at && (
                 <div className="text-sm text-muted-foreground">
-                  <p>Check your email for a verification link.</p>
+                  <p>Periksa email Anda untuk tautan verifikasi.</p>
                   <p className="mt-2">
                     Email: <strong>{user?.email}</strong>
                   </p>
