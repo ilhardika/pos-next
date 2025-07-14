@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { signUp } from "@/lib/auth";
+import { signUpWithStore } from "@/lib/auth";
 import { Loader2, Eye, EyeOff, Store } from "lucide-react";
 
 interface SignupFormProps {
@@ -76,10 +76,11 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
     setLoading(true);
 
     try {
-      const { user } = await signUp(
+      const { user } = await signUpWithStore(
         formData.email,
         formData.password,
-        formData.fullName
+        formData.fullName,
+        formData.storeName
       );
 
       if (user) {

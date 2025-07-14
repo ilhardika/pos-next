@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StoreInfo } from "@/components/dashboard/StoreInfo";
 import { Store, User, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -67,8 +68,34 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* Store Information */}
+        {profile ? (
+          <StoreInfo />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Setting up your store...</CardTitle>
+              <CardDescription>
+                {user?.email_confirmed_at
+                  ? "Creating your store and profile. This may take a moment..."
+                  : "Please verify your email to complete store setup."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!user?.email_confirmed_at && (
+                <div className="text-sm text-muted-foreground">
+                  <p>Check your email for a verification link.</p>
+                  <p className="mt-2">
+                    Email: <strong>{user?.email}</strong>
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {/* User Info Card */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 mt-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -136,55 +163,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Next Steps</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Your authentication is working! The next tasks will add:
-                </p>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>• Store creation on signup</li>
-                  <li>• Route protection middleware</li>
-                  <li>• Dashboard layout</li>
-                  <li>• Product management</li>
-                  <li>• POS functionality</li>
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
         </div>
-
-        {/* Debug Info (remove in production) */}
-        {process.env.NODE_ENV === "development" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Debug Information</CardTitle>
-              <CardDescription>
-                This section shows authentication data for development
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">User Object:</h4>
-                  <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
-                    {JSON.stringify(user, null, 2)}
-                  </pre>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">Profile Object:</h4>
-                  <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
-                    {JSON.stringify(profile, null, 2)}
-                  </pre>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
