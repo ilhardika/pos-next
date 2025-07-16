@@ -5,15 +5,13 @@ import { fetchProductsAction } from "@/app/actions/products";
 import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { CardLoading } from "@/components/ui/loading";
 import {
-  TrendingUp,
   Package,
-  ShoppingCart,
-  Users,
   DollarSign,
-  Activity,
   AlertTriangle,
   Tag,
+  Activity,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -126,12 +124,16 @@ export default function DashboardPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.totalProducts}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : `${stats.activeProducts} Produk aktif`}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{stats.totalProducts}</div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.activeProducts} Produk aktif
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -141,12 +143,14 @@ export default function DashboardPage() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.lowStockCount}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Perlu restock"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{stats.lowStockCount}</div>
+                <p className="text-xs text-muted-foreground">Perlu restock</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -156,12 +160,14 @@ export default function DashboardPage() {
             <Tag className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.categoryCount}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Kategori produk"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{stats.categoryCount}</div>
+                <p className="text-xs text-muted-foreground">Kategori produk</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -171,12 +177,18 @@ export default function DashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : formatCurrency(stats.stockValue)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Total nilai inventaris"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(stats.stockValue)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Total nilai inventaris
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>

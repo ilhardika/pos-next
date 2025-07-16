@@ -6,8 +6,24 @@ import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, Plus, AlertTriangle, TrendingUp, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ProductForm from "@/components/products/ProductForm";
-import ProductList from "@/components/products/ProductList";
+import { CardLoading } from "@/components/ui/loading";
+import dynamic from "next/dynamic";
+
+const ProductForm = dynamic(() => import("@/components/products/ProductForm"), {
+  loading: () => (
+    <div className="p-6">
+      <CardLoading />
+    </div>
+  ),
+});
+
+const ProductList = dynamic(() => import("@/components/products/ProductList"), {
+  loading: () => (
+    <div className="p-6">
+      <CardLoading />
+    </div>
+  ),
+});
 
 interface ProductStats {
   totalProducts: number;
@@ -173,12 +189,16 @@ export default function ProductsPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.totalProducts}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : `${stats.activeProducts} Produk aktif`}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{stats.totalProducts}</div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.activeProducts} Produk aktif
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -190,12 +210,16 @@ export default function ProductsPage() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.lowStockProducts}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Perlu restock"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {stats.lowStockProducts}
+                </div>
+                <p className="text-xs text-muted-foreground">Perlu restock</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -205,12 +229,14 @@ export default function ProductsPage() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : stats.categories}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Kategori produk"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{stats.categories}</div>
+                <p className="text-xs text-muted-foreground">Kategori produk</p>
+              </>
+            )}
           </CardContent>
         </Card>
 
@@ -220,12 +246,18 @@ export default function ProductsPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {loading ? "..." : formatCurrency(stats.totalValue)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {loading ? "Loading..." : "Total nilai inventori"}
-            </p>
+            {loading ? (
+              <CardLoading />
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {formatCurrency(stats.totalValue)}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Total nilai inventori
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>

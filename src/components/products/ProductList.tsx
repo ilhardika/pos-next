@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Loading } from "@/components/ui/loading";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -188,7 +189,11 @@ export default function ProductList({
       </div>
 
       {/* Products Table */}
-      {filteredProducts.length === 0 ? (
+      {loading ? (
+        <div className="border rounded-lg p-8">
+          <Loading size="lg" text="Memuat produk..." />
+        </div>
+      ) : filteredProducts.length === 0 ? (
         <div className="text-center py-8">
           <Package className="mx-auto h-12 w-12 text-muted-foreground" />
           <h3 className="mt-4 text-lg font-semibold">

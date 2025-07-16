@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
+import { LoadingOverlay } from "@/components/ui/loading-overlay";
+import { PageLoading } from "@/components/ui/loading";
 
 interface User {
   email: string;
@@ -123,14 +125,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Memuat dashboard...</p>
-        </div>
-      </div>
-    );
+    return <PageLoading />;
   }
 
   // Temporarily disable auth check to avoid loops
@@ -141,6 +136,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      <LoadingOverlay />
+
       {/* Sidebar */}
       <DashboardSidebar
         isOpen={sidebarOpen}
@@ -151,7 +148,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <div className="md:ml-64">
         {/* Header */}
-        <DashboardHeader onMenuToggle={handleSidebarToggle} user={user} />
+        <DashboardHeader
+          onMenuToggle={handleSidebarToggle}
+          user={user || undefined}
+        />
 
         {/* Page Content */}
         <main className="flex-1">
