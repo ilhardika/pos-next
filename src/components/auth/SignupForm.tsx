@@ -62,6 +62,8 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
       return false;
     }
 
+    // Allow all email domains - verification status will be shown in profile
+
     return true;
   };
 
@@ -167,7 +169,7 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
               id="email"
               name="email"
               type="email"
-              placeholder="Masukkan email Anda"
+              placeholder="contoh: demo@example.com"
               value={formData.email}
               onChange={handleChange}
               required

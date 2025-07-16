@@ -21,32 +21,23 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     const checkAuth = async () => {
       try {
-        console.log("[AuthGuard] Checking auth...");
         const {
           data: { user },
           error,
         } = await supabase.auth.getUser();
 
-        console.log(
-          "[AuthGuard] User:",
-          user ? "Found" : "Not found",
-          error ? `Error: ${error.message}` : ""
-        );
-
         if (!mounted) return;
 
         if (error || !user) {
-          console.log("[AuthGuard] No user, redirecting to login...");
           setRedirecting(true);
           const currentPath = window.location.pathname;
           router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
           return;
         }
 
-        console.log("[AuthGuard] User authenticated, setting user...");
         setUser(user);
       } catch (error) {
-        console.error("[AuthGuard] Auth check error:", error);
+        console.error("Auth check error:", error);
         if (mounted && !redirecting) {
           setRedirecting(true);
           router.push("/login");
@@ -64,23 +55,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log(
-        "[AuthGuard] Auth state change:",
-        event,
-        session ? "Session exists" : "No session"
-      );
-
       if (!mounted) return;
 
       if (event === "SIGNED_OUT" || !session) {
-        console.log("[AuthGuard] User signed out, redirecting...");
         setUser(null);
         if (!redirecting) {
           setRedirecting(true);
           router.push("/login");
         }
       } else if (event === "SIGNED_IN" && session) {
-        console.log("[AuthGuard] User signed in, setting user...");
         setUser(session.user);
         setRedirecting(false);
       }

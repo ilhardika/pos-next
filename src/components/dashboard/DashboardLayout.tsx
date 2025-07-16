@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabase";
 import DashboardHeader from "./DashboardHeader";
 import DashboardSidebar from "./DashboardSidebar";
 
@@ -10,6 +10,7 @@ interface User {
   full_name: string;
   role: string;
   store_name: string;
+  email_verified: boolean;
 }
 
 interface DashboardLayoutProps {
@@ -20,51 +21,76 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const {
-          data: { user: authUser },
-          error: authError,
-        } = await supabase.auth.getUser();
+        // Wait a bit for session to be established
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-        if (authError || !authUser) {
-          console.error("Auth error:", authError);
+        // Get fresh session
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
+
+        if (sessionError) {
           setLoading(false);
           return;
         }
 
-        // Fetch user profile data
+        const authUser = sessionData.session?.user;
+
+        if (!authUser) {
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user profile data with simpler query
         const { data: profile, error: profileError } = await supabase
           .from("users")
-          .select(
-            `
-            full_name,
-            role,
-            stores (
-              name
-            )
-          `
-          )
+          .select("full_name, role, store_id")
           .eq("id", authUser.id)
           .single();
 
-        if (profileError) {
-          console.error("Profile error:", profileError);
-          setLoading(false);
-          return;
+        let storeName = "Toko";
+        if (profile?.store_id) {
+          const { data: store } = await supabase
+            .from("stores")
+            .select("name")
+            .eq("id", profile.store_id)
+            .single();
+          storeName = store?.name || "Toko";
         }
 
-        console.log("Profile data:", profile);
+        if (profileError) {
+          // If user profile doesn't exist, redirect to complete profile
+          if (profileError.code === "PGRST116") {
+            // For now, set basic user info from auth
+            setUser({
+              email: authUser.email || "",
+              full_name:
+                authUser.user_metadata?.full_name ||
+                authUser.email?.split("@")[0] ||
+                "User",
+              role: "owner",
+              store_name: "Toko",
+              email_verified: authUser.email_confirmed_at ? true : false,
+            });
+          } else {
+            setLoading(false);
+            return;
+          }
+        } else {
+          const userData = {
+            email: authUser.email || "",
+            full_name:
+              profile?.full_name || authUser.user_metadata?.full_name || "",
+            role: profile?.role || "owner",
+            store_name: storeName,
+            email_verified: authUser.email_confirmed_at ? true : false,
+          };
 
-        setUser({
-          email: authUser.email || "",
-          full_name: profile?.full_name || "",
-          role: profile?.role || "cashier",
-          store_name: profile?.stores?.name || "Toko",
-        });
+          setUser(userData);
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {
@@ -73,6 +99,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     };
 
     fetchUserData();
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        fetchUserData();
+      } else if (event === "SIGNED_OUT") {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, [supabase]);
 
   const handleSidebarToggle = () => {
@@ -93,6 +132,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     );
   }
+
+  // Temporarily disable auth check to avoid loops
+  // if (!user) {
+  //   window.location.href = "/login";
+  //   return null;
+  // }
 
   return (
     <div className="min-h-screen bg-background">

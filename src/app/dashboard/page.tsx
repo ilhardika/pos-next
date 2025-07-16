@@ -1,3 +1,8 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { fetchProductsAction } from "@/app/actions/products";
+import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -7,9 +12,102 @@ import {
   Users,
   DollarSign,
   Activity,
+  AlertTriangle,
+  Tag,
 } from "lucide-react";
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    activeProducts: 0,
+    lowStockCount: 0,
+    categoryCount: 0,
+    stockValue: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Get current user ID
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        // Get products using server action with user ID
+        const result = await fetchProductsAction(user?.id);
+
+        if (!result.success) {
+          console.error("Error fetching products:", result.error);
+          // If fetch fails, set empty stats
+          setStats({
+            totalProducts: 0,
+            activeProducts: 0,
+            lowStockCount: 0,
+            categoryCount: 0,
+            stockValue: 0,
+          });
+          return;
+        }
+
+        const products = result.data;
+
+        // Calculate stats
+        const activeProducts = products?.filter((p) => p.is_active) || [];
+
+        // Low stock: products with stock_quantity <= min_stock_level (default min_stock_level = 5 if not set)
+        const lowStock =
+          products?.filter((p) => {
+            const minStock = p.min_stock_level || 5;
+            return p.is_active && (p.stock_quantity || 0) <= minStock;
+          }) || [];
+
+        // Get unique categories from active products only
+        const categories = [
+          ...new Set(
+            products
+              ?.filter((p) => p.is_active && p.category)
+              .map((p) => p.category.trim())
+              .filter((cat) => cat && cat.length > 0)
+          ),
+        ];
+
+        // Calculate total stock value (price * stock_quantity for active products)
+        const stockValue =
+          products
+            ?.filter((p) => p.is_active)
+            .reduce((total, product) => {
+              return (
+                total +
+                (parseFloat(product.price) || 0) * (product.stock_quantity || 0)
+              );
+            }, 0) || 0;
+
+        setStats({
+          totalProducts: products?.length || 0,
+          activeProducts: activeProducts.length,
+          lowStockCount: lowStock.length,
+          categoryCount: categories.length,
+          stockValue: stockValue,
+        });
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(amount);
+  };
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -24,48 +122,60 @@ export default function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Penjualan
-            </CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">Rp 0</div>
-            <p className="text-xs text-muted-foreground">+0% dari bulan lalu</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transaksi</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">+0% dari kemarin</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Produk</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Produk</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">Total produk aktif</p>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : stats.totalProducts}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {loading ? "Loading..." : `${stats.activeProducts} Produk aktif`}
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Staff Aktif</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Stok Rendah</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1</div>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : stats.lowStockCount}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Staff yang login hari ini
+              {loading ? "Loading..." : "Perlu restock"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Kategori</CardTitle>
+            <Tag className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : stats.categoryCount}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {loading ? "Loading..." : "Kategori produk"}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Nilai Stok</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {loading ? "..." : formatCurrency(stats.stockValue)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {loading ? "Loading..." : "Total nilai inventaris"}
             </p>
           </CardContent>
         </Card>

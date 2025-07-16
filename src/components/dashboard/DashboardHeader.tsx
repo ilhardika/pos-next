@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,6 +32,7 @@ interface DashboardHeaderProps {
     full_name: string;
     role: string;
     store_name: string;
+    email_verified: boolean;
   };
 }
 
@@ -41,7 +42,6 @@ export default function DashboardHeader({
 }: DashboardHeaderProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
   const handleLogout = async () => {
     setLoading(true);
@@ -143,9 +143,19 @@ export default function DashboardHeader({
                       {getRoleLabel(user?.role || "")}
                     </Badge>
                   </div>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {user?.email || "user@example.com"}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email || "Loading..."}
+                    </p>
+                    {user?.email_verified === false && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs px-1 py-0 text-orange-600 border-orange-300"
+                      >
+                        Belum Verifikasi
+                      </Badge>
+                    )}
+                  </div>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.store_name || "Toko"}
                   </p>
