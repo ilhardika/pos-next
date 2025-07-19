@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, Plus, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function TransactionsPage() {
   return (
@@ -38,7 +37,9 @@ export default function TransactionsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground">Transaksi minggu ini</p>
+            <p className="text-xs text-muted-foreground">
+              Transaksi minggu ini
+            </p>
           </CardContent>
         </Card>
 

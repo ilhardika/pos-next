@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useCallback,
+} from "react";
 import type { ReactNode } from "react";
 import {
   AuthUser,
@@ -26,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user) {
       try {
         const userProfile = await getUserProfile(user.id);
@@ -38,7 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             user.email?.split("@")[0] ||
             "User";
           const storeName =
-            user.user_metadata?.store_name || `${fullName}'s Store`;
+            (user.user_metadata as { store_name?: string })?.store_name ||
+            `${fullName}'s Store`;
 
           try {
             const { userProfile: newProfile } = await createStoreAndProfile(
@@ -62,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       setProfile(null);
     }
-  };
+  }, [user]);
 
   const handleSignOut = async () => {
     const { signOut } = await import("@/lib/auth");
@@ -99,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Fetch profile when user changes
   useEffect(() => {
     refreshProfile();
-  }, [user]);
+  }, [user, refreshProfile]);
 
   const value = {
     user,

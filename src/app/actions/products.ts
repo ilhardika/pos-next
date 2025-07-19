@@ -2,6 +2,7 @@
 
 import { createProduct, updateProduct, type ProductData } from "@/lib/products";
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 // Create service role client for bypassing RLS
@@ -17,10 +18,10 @@ const supabaseAdmin = createClient(
 );
 
 // Create server-side client with cookies
-function createServerClient() {
-  const cookieStore = cookies();
+async function createServerSupabaseClient() {
+  const cookieStore = await cookies();
 
-  return createClient(
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -28,10 +29,10 @@ function createServerClient() {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set() {
           // Server actions can't set cookies, but we need this for the client
         },
-        remove(name: string, options: any) {
+        remove() {
           // Server actions can't remove cookies, but we need this for the client
         },
       },
@@ -64,10 +65,9 @@ export async function createProductAction(
       storeId = userProfile.store_id;
     } else {
       // Fallback: try to get from server session
-      const supabase = createServerClient();
+      const supabase = await createServerSupabaseClient();
       const {
         data: { user },
-        error: userError,
       } = await supabase.auth.getUser();
 
       if (!user) {
@@ -97,7 +97,10 @@ export async function createProductAction(
     const result = await createProduct(productData, storeId);
 
     if (result.error) {
-      return { success: false, error: result.error.message };
+      return {
+        success: false,
+        error: (result.error as Error).message || "Error creating product",
+      };
     }
 
     return { success: true, data: result.data };
@@ -115,7 +118,10 @@ export async function updateProductAction(
     const result = await updateProduct(productId, productData);
 
     if (result.error) {
-      return { success: false, error: result.error.message };
+      return {
+        success: false,
+        error: (result.error as Error).message || "Error updating product",
+      };
     }
 
     return { success: true, data: result.data };
@@ -147,7 +153,7 @@ export async function fetchProductsAction(userId?: string) {
       storeId = userProfile.store_id;
     } else {
       // Fallback: try to get from server session
-      const supabase = createServerClient();
+      const supabase = await createServerSupabaseClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -237,7 +243,7 @@ export async function checkCategoryUsageAction(
       storeId = userProfile.store_id;
     } else {
       // Fallback: try to get from server session
-      const supabase = createServerClient();
+      const supabase = await createServerSupabaseClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -314,7 +320,7 @@ export async function checkUnitUsageAction(unit: string, userId?: string) {
       storeId = userProfile.store_id;
     } else {
       // Fallback: try to get from server session
-      const supabase = createServerClient();
+      const supabase = await createServerSupabaseClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();

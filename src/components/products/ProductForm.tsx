@@ -44,7 +44,18 @@ const productSchema = z.object({
 type ProductFormValues = z.infer<typeof productSchema>;
 
 interface ProductFormProps {
-  initialData?: any;
+  initialData?: {
+    id: string;
+    name: string;
+    description: string | null;
+    price: number;
+    cost: number;
+    stock_quantity: number;
+    min_stock_level: number;
+    category: string;
+    unit: string;
+    is_active: boolean;
+  };
   onCancel: () => void;
   onSuccess: () => void;
 }
@@ -57,7 +68,7 @@ export default function ProductForm({
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [units, setUnits] = useState<string[]>([]);
-  const [userId, setUserId] = useState<string | null>(null);
+
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
     title: string;
@@ -103,7 +114,7 @@ export default function ProductForm({
     };
 
     loadUserData();
-  }, [supabase]);
+  }, []);
 
   const addCategory = async (newCategory: string) => {
     const {

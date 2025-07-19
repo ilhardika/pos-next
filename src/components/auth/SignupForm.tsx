@@ -92,8 +92,8 @@ export function SignupForm({ onToggleMode }: SignupFormProps) {
           router.push("/verify-email");
         }, 2000);
       }
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat mendaftar");
+    } catch (err: unknown) {
+      setError((err as Error).message || "Terjadi kesalahan saat mendaftar");
     } finally {
       setLoading(false);
     }

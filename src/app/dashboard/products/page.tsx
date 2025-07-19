@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 import { fetchProductsAction } from "@/app/actions/products";
 import { supabase } from "@/lib/supabase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Plus, AlertTriangle, TrendingUp, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Package, AlertTriangle, TrendingUp } from "lucide-react";
 import { CardLoading } from "@/components/ui/loading";
 import dynamic from "next/dynamic";
 
@@ -33,9 +32,22 @@ interface ProductStats {
   totalValue: number;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  cost: number;
+  stock_quantity: number;
+  min_stock_level: number;
+  category: string;
+  unit: string;
+  is_active: boolean;
+}
+
 export default function ProductsPage() {
   const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [stats, setStats] = useState<ProductStats>({
     totalProducts: 0,
     activeProducts: 0,
@@ -126,7 +138,7 @@ export default function ProductsPage() {
     setShowForm(true);
   };
 
-  const handleEditProduct = (product: any) => {
+  const handleEditProduct = (product: Product) => {
     setEditingProduct(product);
     setShowForm(true);
   };
@@ -165,7 +177,7 @@ export default function ProductsPage() {
         </div>
 
         <ProductForm
-          initialData={editingProduct}
+          initialData={editingProduct || undefined}
           onCancel={handleFormCancel}
           onSuccess={handleFormSuccess}
         />

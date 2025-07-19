@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Plus, UserCheck, UserX } from "lucide-react";
+import { Users, Plus, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -78,7 +78,9 @@ export default function StaffPage() {
                 </div>
                 <div>
                   <p className="font-medium">Owner</p>
-                  <p className="text-sm text-muted-foreground">owner@example.com</p>
+                  <p className="text-sm text-muted-foreground">
+                    owner@example.com
+                  </p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
@@ -86,7 +88,7 @@ export default function StaffPage() {
                 <Badge className="bg-green-100 text-green-800">Aktif</Badge>
               </div>
             </div>
-            
+
             <div className="text-center py-8 border-2 border-dashed border-muted rounded-lg">
               <Users className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-4 text-lg font-semibold">Tambah staff baru</h3>

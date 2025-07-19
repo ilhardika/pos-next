@@ -105,7 +105,7 @@ export function ComboboxInput({
               <CommandGroup>
                 <CommandItem onSelect={handleAddNew} className="cursor-pointer">
                   <Plus className="mr-2 h-4 w-4" />
-                  Tambah "{inputValue}"
+                  Tambah &quot;{inputValue}&quot;
                 </CommandItem>
               </CommandGroup>
             )}
@@ -151,7 +151,7 @@ export function ComboboxInput({
                       className="cursor-pointer"
                     >
                       <Plus className="mr-2 h-4 w-4" />
-                      Tambah "{inputValue}"
+                      Tambah &quot;{inputValue}&quot;
                     </CommandItem>
                   )}
               </CommandGroup>

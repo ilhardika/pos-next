@@ -308,8 +308,8 @@ export default function ProductList({
           <AlertDialogHeader>
             <AlertDialogTitle>Hapus Produk</AlertDialogTitle>
             <AlertDialogDescription>
-              Apakah Anda yakin ingin menghapus produk "{deleteProduct?.name}"?
-              Tindakan ini tidak dapat dibatalkan.
+              Apakah Anda yakin ingin menghapus produk &quot;
+              {deleteProduct?.name}&quot;? Tindakan ini tidak dapat dibatalkan.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

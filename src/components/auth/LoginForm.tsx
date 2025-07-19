@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,8 +44,8 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
       setTimeout(() => {
         router.push(redirectTo);
       }, 1000);
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat login");
+    } catch (err: unknown) {
+      setError((err as Error).message || "Terjadi kesalahan saat login");
       setLoading(false);
     }
   };

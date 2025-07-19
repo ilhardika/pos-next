@@ -14,16 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Menu,
-  User,
-  LogOut,
-  Settings,
-  Store,
-  Bell,
-  Search,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Menu, User, LogOut, Settings, Bell } from "lucide-react";
 
 interface DashboardHeaderProps {
   onMenuToggle: () => void;

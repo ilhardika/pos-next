@@ -3,9 +3,9 @@ import { createStore } from "./stores";
 import type { User } from "@supabase/supabase-js";
 
 export interface AuthUser extends User {
-  user_metadata?: {
+  user_metadata: {
     full_name?: string;
-  };
+  } & Record<string, unknown>;
 }
 
 export interface UserProfile {
