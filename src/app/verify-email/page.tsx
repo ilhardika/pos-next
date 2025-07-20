@@ -10,24 +10,41 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
+import { Mail, ArrowLeft, CheckCircle, RefreshCw } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 
 export default function VerifyEmailPage() {
   const [isVerified, setIsVerified] = useState(false);
-  const { user, loading } = useAuth();
+  const [refreshing, setRefreshing] = useState(false);
+  const { user, loading, refreshProfile } = useAuth();
   const router = useRouter();
+
+  const handleRefreshStatus = async () => {
+    setRefreshing(true);
+    try {
+      // Refresh user data from Supabase
+      const {
+        data: { user: refreshedUser },
+      } = await supabase.auth.getUser();
+      if (refreshedUser?.email_confirmed_at) {
+        setIsVerified(true);
+        // Also refresh the profile data
+        await refreshProfile();
+      }
+    } catch (error) {
+      console.error("Error refreshing user status:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     // Check if user is already verified
     if (user?.email_confirmed_at) {
       setIsVerified(true);
-      // Redirect to dashboard after a short delay
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 2000);
     }
-  }, [user, router]);
+  }, [user]);
 
   if (loading) {
     return (
@@ -52,13 +69,23 @@ export default function VerifyEmailPage() {
               Akun Anda telah berhasil diverifikasi
             </CardDescription>
           </CardHeader>
-          <CardContent className="text-center">
+          <CardContent className="text-center space-y-4">
             <div className="mb-4">
               <CheckCircle className="h-12 w-12 mx-auto text-green-600" />
             </div>
-            <p className="text-sm text-muted-foreground mb-4">
-              Mengarahkan Anda ke dashboard...
+            <p className="text-sm text-muted-foreground">
+              Selamat! Email Anda telah berhasil diverifikasi. Sekarang Anda
+              dapat mengakses dashboard dan mulai menggunakan aplikasi POS.
             </p>
+            <div className="pt-4">
+              <Button
+                onClick={() => router.push("/dashboard")}
+                className="w-full"
+                size="lg"
+              >
+                Masuk ke Dashboard
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -90,17 +117,45 @@ export default function VerifyEmailPage() {
             </p>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Klik tautan di email untuk memverifikasi akun Anda dan
-              menyelesaikan pengaturan.
-            </p>
+          <div className="space-y-3">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800 font-medium mb-2">
+                Langkah selanjutnya:
+              </p>
+              <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                <li>Buka email dari aplikasi POS di kotak masuk Anda</li>
+                <li>
+                  Klik tautan &quot;Verifikasi Email&quot; dalam email tersebut
+                </li>
+                <li>Setelah berhasil, kembali ke halaman ini</li>
+                <li>Klik &quot;Periksa Status Verifikasi&quot; di bawah</li>
+              </ol>
+            </div>
             <p className="text-xs text-muted-foreground">
-              Tidak menerima email? Periksa folder spam atau hubungi dukungan.
+              Tidak menerima email? Periksa folder spam atau tunggu beberapa
+              menit lagi.
             </p>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 space-y-3">
+            <Button
+              onClick={handleRefreshStatus}
+              disabled={refreshing}
+              className="w-full"
+              variant="default"
+            >
+              {refreshing ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Memeriksa Status...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Periksa Status Verifikasi
+                </>
+              )}
+            </Button>
             <Button
               variant="outline"
               onClick={() => router.push("/login")}
