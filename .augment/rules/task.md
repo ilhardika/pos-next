@@ -20,7 +20,7 @@ Here’s the full task list you must follow:
 6. Add middleware.ts to protect all /dashboard/\* routes - ok
 7. Set up a layout for /dashboard with sidebar and header using shadcn/ui - ok
 8. Build the Products page with crud functionality - ok
-9. Build a POS transaction page
+9. Build a POS transaction page - ok
 10. Add simple sales reports
 11. Add staff management (invite/remove cashiers)
 12. Ensure role-based access control for each page
